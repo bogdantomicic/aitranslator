@@ -11,6 +11,12 @@ function App() {
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
+  const [selectedLevel, setSelectedLevel] = useState('');
+
+  const levels = ['A0', 'A1', 'B1', 'B1+', 'C1', 'C2'];
+  const handleLevelChange = (event) => {
+    setSelectedLevel(event.target.value);
+  };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -56,7 +62,7 @@ function App() {
         {
           role: "system",
           content:
-            "Give me an example of one sentence in English at B1+ level for the following word.",
+            "Give me an example of one sentence in English at " +selectedLevel+ "  level for the following word.",
         },
         {
           role: "user",
@@ -82,7 +88,6 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        console.log(data);
         setSentiment(data.choices[0].message.content); // Positive or negative
       });
 
@@ -98,7 +103,6 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        console.log(data);
         setSentiment2(data.choices[0].message.content); // Positive or negative
       });
   }
@@ -106,6 +110,7 @@ function App() {
   
 
   console.log(tweet);
+  console.log(selectedLevel);
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-center items-center">
       <div>
@@ -136,6 +141,18 @@ function App() {
         </button>
       </div>
 
+      <h1>Padajući Meni Nivoa</h1>
+      <label htmlFor="levelSelect">Izaberite nivo:</label>
+      <select id="levelSelect" value={selectedLevel} onChange={handleLevelChange}>
+        <option value="">Izaberite nivo</option>
+        {levels.map((level) => (
+          <option key={level} value={level}>
+            {level}
+          </option>
+        ))}
+      </select>
+      {selectedLevel && <p>Izabrali ste nivo: {selectedLevel}</p>}
+
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
           {isValid ? "" : "Neispravan text"}
@@ -148,7 +165,7 @@ function App() {
           </h3>
         ) : null}
         {sentiment2 !== "" && isValid ? (
-          <h3>Primjer recenice na B1+ nivou engleskog: {sentiment2}</h3>
+          <h3>Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}</h3>
         ) : null}
       </div>
     </div>
