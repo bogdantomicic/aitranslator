@@ -85,7 +85,7 @@ function App() {
       formData.append('file', audioBlob);
 
       const response = await axios.post(
-        'http://localhost:3000/whisper/asr',  // Koristi svoju IP adresu ili domenu
+        'http://localhost:4000/whisper/asr',  // Koristi svoju IP adresu ili domenu
         formData,
         {
           headers: {
@@ -93,6 +93,7 @@ function App() {
           },
         }
       );
+      
 
       // Handle response and set transcript state
       setTranscript(response.data.text);
