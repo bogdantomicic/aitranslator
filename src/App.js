@@ -3,6 +3,7 @@ import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
 
+const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
 function App() {
