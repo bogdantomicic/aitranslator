@@ -131,7 +131,24 @@ function App() {
           />
         </div>
       </div>
-      <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700">
+      <p className=" ">
+          {selectedLevel ? "" : <label className='text-red-800 font-extrabold text-center' htmlFor="levelSelect">Izaberite nivo jezika:</label>}
+       
+
+      </p>
+      <select id="levelSelect" value={selectedLevel} onChange={handleLevelChange}>
+        <option value="">A0, A1, B1 ...</option>
+        {levels.map((level) => (
+          <option key={level} value={level}>
+            {level}
+          </option>
+        ))}
+      </select>
+      {selectedLevel && <p className='text-white'>Izabrali ste nivo: {selectedLevel}</p>}
+      
+      
+
+      <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700 mt-5">
         <button
           className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
           onClick={isValid  && selectedLevel ? callOpenAIAPI : noFunction}
@@ -142,16 +159,7 @@ function App() {
       </div>
 
 
-      <label className='text-white' htmlFor="levelSelect">Izaberite nivo:</label>
-      <select id="levelSelect" value={selectedLevel} onChange={handleLevelChange}>
-        <option value="">Izaberite nivo:</option>
-        {levels.map((level) => (
-          <option key={level} value={level}>
-            {level}
-          </option>
-        ))}
-      </select>
-      {selectedLevel && <p className='text-white'>Izabrali ste nivo: {selectedLevel}</p>}
+   
      
 
       <div className="pt-2">
