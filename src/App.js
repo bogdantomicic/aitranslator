@@ -30,7 +30,11 @@ function App() {
   
   function noFunction() {
     console.log("NE RADI");
-  }
+  };
+  const handleButtonClick = () => {
+    translateWord();
+    callOpenAIAPI();
+  };
 
   const translateWord = async () => {
     try {
@@ -39,7 +43,7 @@ function App() {
         {},
         {
           params: {
-            q: inputWord,
+            q: tweet,
             source: 'en',
             target: 'sr',
             key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
@@ -179,7 +183,7 @@ function App() {
       <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700 mt-5">
         <button
           className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-          onClick={isValid  && selectedLevel ? callOpenAIAPI : noFunction}
+          onClick={isValid  && selectedLevel ? handleButtonClick : noFunction}
 
         >
           Prevedi uz pomoc AI translatora
@@ -188,11 +192,11 @@ function App() {
 
 
       
-    <div>
+    <div className='bg-white mt-5'>
       <h1>English to Serbian Translation</h1>
       <input
         type="text"
-        value={inputWord}
+        value={tweet}
         onChange={(e) => setInputWord(e.target.value)}
         placeholder="Enter a word in English"
       />
