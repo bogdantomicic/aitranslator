@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
+import axios from 'axios';
 
 const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -13,6 +14,8 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState('');
+  const [inputWord, setInputWord] = useState('');
+  const [translatedWord, setTranslatedWord] = useState('');
 
   const levels = ['A0', 'A1', 'B1', 'B1+', 'C1', 'C2'];
   const handleLevelChange = (event) => {
@@ -28,6 +31,30 @@ function App() {
   function noFunction() {
     console.log("NE RADI");
   }
+
+  const translateWord = async () => {
+    try {
+      const response = await axios.post(
+        'https://translation.googleapis.com/language/translate/v2',
+        {},
+        {
+          params: {
+            q: inputWord,
+            source: 'en',
+            target: 'sr',
+            key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
+          },
+        }
+      );
+      
+      const translatedText = response.data.data.translations[0].translatedText;
+      setTranslatedWord(translatedText);
+    } catch (error) {
+      console.error('Error translating word:', error);
+    }
+  };
+
+
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
@@ -160,7 +187,19 @@ function App() {
       </div>
 
 
-   
+      
+    <div>
+      <h1>English to Serbian Translation</h1>
+      <input
+        type="text"
+        value={inputWord}
+        onChange={(e) => setInputWord(e.target.value)}
+        placeholder="Enter a word in English"
+      />
+      <button onClick={translateWord}>Translate</button>
+      {translatedWord && <p>Translated: {translatedWord}</p>}
+    </div>
+  
      
 
       <div className="pt-2">
