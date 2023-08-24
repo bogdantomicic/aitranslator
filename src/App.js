@@ -8,6 +8,8 @@ const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
 function App() {
+
+  
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
@@ -16,6 +18,10 @@ function App() {
   const [selectedLevel, setSelectedLevel] = useState('');
   const [inputWord, setInputWord] = useState('');
   const [translatedWord, setTranslatedWord] = useState('');
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [audioChunks, setAudioChunks] = useState([]);
 
   const levels = ['A0', 'A1', 'B1', 'B1+', 'C1', 'C2'];
   const handleLevelChange = (event) => {
@@ -35,6 +41,68 @@ function App() {
     translateWord();
     callOpenAIAPI();
   };
+
+  ////
+
+  let mediaRecorder = null;
+
+  const handleDataAvailable = (event) => {
+    if (event.data.size > 0) {
+      setAudioChunks((chunks) => [...chunks, event.data]);
+    }
+  };
+
+  const startRecording = () => {
+    setIsRecording(true);
+    setTranscript('');
+    setAudioChunks([]);
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = handleDataAvailable;
+        mediaRecorder.start();
+      })
+      .catch((error) => {
+        console.error('Error accessing microphone:', error);
+        setIsRecording(false);
+      });
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+    }
+
+    // Convert and send audio to Whisper API
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const apiKey = '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';
+
+    try {
+      const formData = new FormData();
+      formData.append('file', audioBlob);
+
+      const response = await axios.post(
+        'http://localhost:3000/whisper/asr',  // Koristi svoju IP adresu ili domenu
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      );
+
+      // Handle response and set transcript state
+      setTranscript(response.data.text);
+    } catch (error) {
+      console.error('Error:', error);
+    }}
+
+  ////
+
+  
 
   const translateWord = async () => {
     try {
@@ -164,11 +232,22 @@ function App() {
         </div>
       </div>
       <p className=" ">
-          {selectedLevel ? "" : <label className='text-red-800 font-extrabold text-center' htmlFor="levelSelect">Izaberite nivo jezika:</label>}
-       
-
+        {selectedLevel ? (
+          ""
+        ) : (
+          <label
+            className="text-red-800 font-extrabold text-center"
+            htmlFor="levelSelect"
+          >
+            Izaberite nivo jezika:
+          </label>
+        )}
       </p>
-      <select id="levelSelect" value={selectedLevel} onChange={handleLevelChange}>
+      <select
+        id="levelSelect"
+        value={selectedLevel}
+        onChange={handleLevelChange}
+      >
         <option value="">A0, A1, B1 ...</option>
         {levels.map((level) => (
           <option key={level} value={level}>
@@ -176,35 +255,30 @@ function App() {
           </option>
         ))}
       </select>
-      {selectedLevel && <p className='text-white'>Izabrali ste nivo: {selectedLevel}</p>}
-      
-      
+      {selectedLevel && (
+        <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
+      )}
 
       <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700 mt-5">
         <button
           className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-          onClick={isValid  && selectedLevel ? handleButtonClick : noFunction}
-
+          onClick={isValid && selectedLevel ? handleButtonClick : noFunction}
         >
           Prevedi uz pomoc AI translatora
         </button>
       </div>
 
-
-      
-    <div className='bg-white mt-5'>
-      <h1>English to Serbian Translation</h1>
-      <input
-        type="text"
-        value={tweet}
-        onChange={(e) => setInputWord(e.target.value)}
-        placeholder="Enter a word in English"
-      />
-      <button onClick={translateWord}>Translate</button>
-      {translatedWord && <p>Translated: {translatedWord}</p>}
-    </div>
-  
-     
+      <div className="bg-white mt-5">
+        <h1>English to Serbian Translation</h1>
+        <input
+          type="text"
+          value={tweet}
+          onChange={(e) => setInputWord(e.target.value)}
+          placeholder="Enter a word in English"
+        />
+        <button onClick={translateWord}>Translate</button>
+        {translatedWord && <p>Translated: {translatedWord}</p>}
+      </div>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
@@ -218,9 +292,23 @@ function App() {
           </h3>
         ) : null}
         {sentiment2 !== "" && isValid ? (
-          <h3>Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}</h3>
+          <h3>
+            Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
+          </h3>
         ) : null}
       </div>
+
+      <div className='bg-white'>
+      {isRecording ? (
+        <button onClick={stopRecording}>Stop Recording</button>
+      ) : (
+        <button onClick={startRecording}>Start Recording</button>
+      )}
+      <div>
+        <p className='text-black'>Transcript: {transcript}</p>
+      </div>
+    </div>
+
     </div>
   );
 }
