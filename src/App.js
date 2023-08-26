@@ -8,7 +8,7 @@ import { GoogleTranslate } from './components/GoogleTranslate';
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
-let googleTranslateOn;
+
 
 function App() {
   const [tweet, setTweet] = useState("");
@@ -17,10 +17,8 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState("");
+  const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
 
-  /////////////
-  /// const [translatedWord, setTranslatedWord] = useState('');
-  /////////////
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
@@ -37,44 +35,12 @@ function App() {
     console.log("NE RADI");
   }
 
-  /////////////
-
-  /// console.log(translateWord);
-
  
   const handleButtonClick = () => {
-    googleTranslateOn = true;
+    setGoogleTranslateOn(true);
     callOpenAIAPI();
   };
 
-
-  /////////////
-
-  /////////////
-
-  // const translateWord = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       'https://translation.googleapis.com/language/translate/v2',
-  //       {},
-  //       {
-  //         params: {
-  //           q: tweet,
-  //           source: 'en',
-  //           target: 'sr',
-  //           key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
-  //         },
-  //       }
-  //     );
-
-  //     const translatedText = response.data.data.translations[0].translatedText;
-  //     setTranslatedWord(translatedText);
-  //   } catch (error) {
-  //     console.error('Error translating word:', error);
-  //   }
-  // };
-
-  /////////////
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
