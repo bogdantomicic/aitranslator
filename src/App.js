@@ -11,13 +11,16 @@ const API_KEY = "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";
 
 
 function App() {
+  const localStorageLevel = localStorage.getItem('izabraniNivo')
+
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
+
 
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
@@ -45,6 +48,8 @@ function App() {
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
 
+    localStorage.setItem('izabraniNivo', selectedLevel.toString());
+    console.log(selectedLevel);
     // For 0-10
     // What is the sentiment of this tweet with a value between 0 and 10 (10 being its very positive)?
 
