@@ -2,8 +2,13 @@
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
+import {VoiceRecording}  from "./components/VoiceRecording";
+import { GoogleTranslate } from './components/GoogleTranslate';
 
+// const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
+
+let googleTranslateOn;
 
 function App() {
   const [tweet, setTweet] = useState("");
@@ -11,9 +16,13 @@ function App() {
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState("");
 
-  const levels = ['A0', 'A1', 'B1', 'B1+', 'C1', 'C2'];
+  /////////////
+  /// const [translatedWord, setTranslatedWord] = useState('');
+  /////////////
+
+  const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
     setSelectedLevel(event.target.value);
   };
@@ -23,10 +32,49 @@ function App() {
     const words = newValue.trim().split(/\s+/);
     setInputValue(words[0]);
   };
-  
+
   function noFunction() {
     console.log("NE RADI");
   }
+
+  /////////////
+
+  /// console.log(translateWord);
+
+ 
+  const handleButtonClick = () => {
+    googleTranslateOn = true;
+    callOpenAIAPI();
+  };
+
+
+  /////////////
+
+  /////////////
+
+  // const translateWord = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       'https://translation.googleapis.com/language/translate/v2',
+  //       {},
+  //       {
+  //         params: {
+  //           q: tweet,
+  //           source: 'en',
+  //           target: 'sr',
+  //           key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
+  //         },
+  //       }
+  //     );
+
+  //     const translatedText = response.data.data.translations[0].translatedText;
+  //     setTranslatedWord(translatedText);
+  //   } catch (error) {
+  //     console.error('Error translating word:', error);
+  //   }
+  // };
+
+  /////////////
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
@@ -62,7 +110,9 @@ function App() {
         {
           role: "system",
           content:
-            "Give me an example of one sentence in English at " +selectedLevel+ "  level for the following word.",
+            "Give me an example of one sentence in English at " +
+            selectedLevel +
+            "  level for the following word.",
         },
         {
           role: "user",
@@ -107,8 +157,6 @@ function App() {
       });
   }
 
-  
-
   console.log(tweet);
   console.log(selectedLevel);
   return (
@@ -132,11 +180,22 @@ function App() {
         </div>
       </div>
       <p className=" ">
-          {selectedLevel ? "" : <label className='text-red-800 font-extrabold text-center' htmlFor="levelSelect">Izaberite nivo jezika:</label>}
-       
-
+        {selectedLevel ? (
+          ""
+        ) : (
+          <label
+            className="text-red-800 font-extrabold text-center"
+            htmlFor="levelSelect"
+          >
+            Izaberite nivo jezika:
+          </label>
+        )}
       </p>
-      <select id="levelSelect" value={selectedLevel} onChange={handleLevelChange}>
+      <select
+        id="levelSelect"
+        value={selectedLevel}
+        onChange={handleLevelChange}
+      >
         <option value="">A0, A1, B1 ...</option>
         {levels.map((level) => (
           <option key={level} value={level}>
@@ -144,23 +203,20 @@ function App() {
           </option>
         ))}
       </select>
-      {selectedLevel && <p className='text-white'>Izabrali ste nivo: {selectedLevel}</p>}
-      
-      
+      {selectedLevel && (
+        <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
+      )}
 
       <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700 mt-5">
         <button
           className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-          onClick={isValid  && selectedLevel ? callOpenAIAPI : noFunction}
-
+          onClick={isValid && selectedLevel ? handleButtonClick : noFunction}
         >
           Prevedi uz pomoc AI translatora
         </button>
       </div>
 
-
-   
-     
+      <GoogleTranslate tweet={tweet} googleTranslateOn={googleTranslateOn}></GoogleTranslate>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
@@ -174,9 +230,13 @@ function App() {
           </h3>
         ) : null}
         {sentiment2 !== "" && isValid ? (
-          <h3>Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}</h3>
+          <h3>
+            Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
+          </h3>
         ) : null}
       </div>
+
+      <VoiceRecording></VoiceRecording>
     </div>
   );
 }
