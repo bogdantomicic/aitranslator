@@ -1,4 +1,4 @@
-
+import classNames from "classnames";
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
@@ -11,7 +11,8 @@ const API_KEY = "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";
 
 
 function App() {
-  const localStorageLevel = localStorage.getItem('izabraniNivo')
+
+  const localStorageLevel = localStorage.getItem('izabraniNivo');
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
@@ -20,8 +21,20 @@ function App() {
   const [isValid, setIsValid] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
+  const [exercise, setExercise] = useState(false);
+  
 
+function exercisee () {
+  setExercise(true)
+  }
+let onOf;
+let onOf2;
+  console.log(exercise);
 
+  if (exercise) {
+    onOf = "hidden"
+    console.log(onOf);
+  }
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
@@ -43,6 +56,8 @@ function App() {
     setGoogleTranslateOn(true);
     callOpenAIAPI();
   };
+
+
 
 
   async function callOpenAIAPI() {
@@ -128,9 +143,16 @@ function App() {
       });
   }
 
+  let classname="bg-red-400";
 
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-center items-center">
+      <div className="w-full h-10 bg-white flex justify-around align-super">
+        <button className="w-full h-full bg-slate-400">Translating</button>{" "}
+        <button onClick={exercisee} className="w-full h-full bg-slate-300">
+          Exercise
+        </button>
+      </div>
       <div>
         <div className="flex pb-3">
           <input
@@ -186,7 +208,11 @@ function App() {
         </button>
       </div>
 
-      <GoogleTranslate tweet={tweet} googleTranslateOn={googleTranslateOn}></GoogleTranslate>
+      <GoogleTranslate
+        classname={classname}
+        tweet={tweet}
+        googleTranslateOn={googleTranslateOn}
+      ></GoogleTranslate>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
