@@ -2,27 +2,27 @@
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
-import axios from 'axios';
 import {VoiceRecording}  from "./components/VoiceRecording";
+import { GoogleTranslate } from './components/GoogleTranslate';
 
-const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
+// const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
-function App() {
+let googleTranslateOn;
 
-  
+function App() {
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState('');
-  const [inputWord, setInputWord] = useState('');
-  const [translatedWord, setTranslatedWord] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState("");
 
+  /////////////
+  /// const [translatedWord, setTranslatedWord] = useState('');
+  /////////////
 
-
-  const levels = ['A0', 'A1', 'B1', 'B1+', 'C1', 'C2'];
+  const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
     setSelectedLevel(event.target.value);
   };
@@ -32,46 +32,49 @@ function App() {
     const words = newValue.trim().split(/\s+/);
     setInputValue(words[0]);
   };
-  
+
   function noFunction() {
     console.log("NE RADI");
-  };
+  }
+
+  /////////////
+
+  /// console.log(translateWord);
+
+ 
   const handleButtonClick = () => {
-    translateWord();
+    googleTranslateOn = true;
     callOpenAIAPI();
   };
 
-  ////
 
-  
+  /////////////
 
-  ////
+  /////////////
 
-  
+  // const translateWord = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       'https://translation.googleapis.com/language/translate/v2',
+  //       {},
+  //       {
+  //         params: {
+  //           q: tweet,
+  //           source: 'en',
+  //           target: 'sr',
+  //           key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
+  //         },
+  //       }
+  //     );
 
-  const translateWord = async () => {
-    try {
-      const response = await axios.post(
-        'https://translation.googleapis.com/language/translate/v2',
-        {},
-        {
-          params: {
-            q: tweet,
-            source: 'en',
-            target: 'sr',
-            key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
-          },
-        }
-      );
-      
-      const translatedText = response.data.data.translations[0].translatedText;
-      setTranslatedWord(translatedText);
-    } catch (error) {
-      console.error('Error translating word:', error);
-    }
-  };
+  //     const translatedText = response.data.data.translations[0].translatedText;
+  //     setTranslatedWord(translatedText);
+  //   } catch (error) {
+  //     console.error('Error translating word:', error);
+  //   }
+  // };
 
-
+  /////////////
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
@@ -107,7 +110,9 @@ function App() {
         {
           role: "system",
           content:
-            "Give me an example of one sentence in English at " +selectedLevel+ "  level for the following word.",
+            "Give me an example of one sentence in English at " +
+            selectedLevel +
+            "  level for the following word.",
         },
         {
           role: "user",
@@ -151,8 +156,6 @@ function App() {
         setSentiment2(data.choices[0].message.content); // Positive or negative
       });
   }
-
-  
 
   console.log(tweet);
   console.log(selectedLevel);
@@ -213,17 +216,7 @@ function App() {
         </button>
       </div>
 
-      <div className="bg-white mt-5">
-        <h1>English to Serbian Translation</h1>
-        <input
-          type="text"
-          value={tweet}
-          onChange={(e) => setInputWord(e.target.value)}
-          placeholder="Enter a word in English"
-        />
-        <button onClick={translateWord}>Translate</button>
-        {translatedWord && <p>Translated: {translatedWord}</p>}
-      </div>
+      <GoogleTranslate tweet={tweet} googleTranslateOn={googleTranslateOn}></GoogleTranslate>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
