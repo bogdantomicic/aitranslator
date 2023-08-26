@@ -157,8 +157,7 @@ function App() {
       });
   }
 
-  console.log(tweet);
-  console.log(selectedLevel);
+
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-center items-center">
       <div>

@@ -7,7 +7,7 @@ import  axios  from "axios";
 
 export function GoogleTranslate (props) {
   const [translatedWord, setTranslatedWord] = useState("");
-  const [inputWord, setInputWord] = useState("");
+//   const [inputWord, setInputWord] = useState("");
   const { tweet, googleTranslateOn } = props;
 
   const translateWord = async () => {
@@ -30,7 +30,6 @@ export function GoogleTranslate (props) {
     } catch (error) {
       console.error("Error translating word:", error);
     }
-    console.log(googleTranslateOn + "ssd");
   };
 
   if (googleTranslateOn) {
@@ -45,7 +44,7 @@ export function GoogleTranslate (props) {
       <input
         type="text"
         value={tweet}
-        onChange={(e) => setInputWord(e.target.value)}
+        onChange={() => {}}
         placeholder="Enter a word in English"
       />
 
