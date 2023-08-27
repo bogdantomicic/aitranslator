@@ -8,7 +8,7 @@ const resources = [
     href: "/contacts",
     name: "Contacts",
     description:
-      "Learn about the contact model and how to create, retrieve, update, delete, and list contacts.",
+      "Samo ukucaj rijec i probaj da pogodis koji je prevod.",
     icon: UserIcon,
     pattern: {
       y: 16,
@@ -29,7 +29,7 @@ function ResourceIcon({ icon: Icon }) {
 }
 
 function ResourcePattern({ mouseX, mouseY, ...gridProps }) {
-  let maskImage = useMotionTemplate`radial-gradient(1000px at ${mouseX}px ${mouseY}px, white, transparent)`;
+  let maskImage = useMotionTemplate`radial-gradient(1500px at ${mouseX}px ${mouseY}px, white, transparent)`;
   let style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
@@ -77,11 +77,11 @@ function Resource({ resource }) {
     <div
       key={resource.href}
       onMouseMove={onMouseMove}
-      className="group relative flex rounded-2xl bg-zinc-50 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5"
+      className="group relative flex rounded-2xl bg-zinc-600 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5"
     >
       <ResourcePattern {...resource.pattern} mouseX={mouseX} mouseY={mouseY} />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />
-      <div className="relative rounded-2xl px-4 pb-4 pt-16">
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20"/>
+      <div className="relative rounded-2xl px-4 pb-4 pt-16 h-screen">
         <ResourceIcon icon={resource.icon} />
         <h3 className="mt-4 text-sm font-semibold leading-7 text-zinc-900 dark:text-white">
         <span className="absolute inset-0 rounded-2xl" />
@@ -96,8 +96,8 @@ function Resource({ resource }) {
 
 export function Resources() {
   return (
-    <div className="my-16 xl:max-w-none w-full absolute top-[100px] left-0 z-0 ">
-      <div className="not-prose mt-4 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4 w-full fixed z-0 ">
+    <div className="my-16 xl:max-w-none w-full absolute -top-[150px] left-0 z-0">
+      <div className="not-prose mt-4 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4 w-full fixed z-0">
         {resources.map((resource) => (
           <Resource key={resource.href} resource={resource} />
         ))}
