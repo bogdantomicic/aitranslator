@@ -66,7 +66,7 @@ let mediaRecorder = null;
     }}
 
     return (
-        <div className='bg-white'>
+        <div className='bg-white mt-10'>
       {isRecording ? (
         <button onClick={stopRecording}>Stop Recording</button>
       ) : (

@@ -1,4 +1,4 @@
-
+import classNames from "classnames";
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
@@ -8,19 +8,45 @@ import { GoogleTranslate } from './components/GoogleTranslate';
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
-let googleTranslateOn;
+
 
 function App() {
+
+  const localStorageLevel = localStorage.getItem('izabraniNivo');
+  const localStorageTask = localStorage.getItem('izabraniTask');
+
+
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
+  const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
+  const [exercise, setExercise] = useState(localStorageTask);
+  
 
-  /////////////
-  /// const [translatedWord, setTranslatedWord] = useState('');
-  /////////////
+  function exerciseOn () {
+  setExercise("true")
+  }
+  function trainingOn () {
+  setExercise("false");
+  }
+
+  localStorage.setItem('izabraniTask', exercise);
+ 
+
+  console.log(exercise);
+
+  let onOf;
+  if (exercise == "true") {
+    onOf = "hidden"
+  }else{
+    onOf = "block"
+  }
+
+ 
+
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
@@ -37,48 +63,20 @@ function App() {
     console.log("NE RADI");
   }
 
-  /////////////
-
-  /// console.log(translateWord);
-
  
   const handleButtonClick = () => {
-    googleTranslateOn = true;
+    setGoogleTranslateOn(true);
     callOpenAIAPI();
   };
 
 
-  /////////////
 
-  /////////////
-
-  // const translateWord = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       'https://translation.googleapis.com/language/translate/v2',
-  //       {},
-  //       {
-  //         params: {
-  //           q: tweet,
-  //           source: 'en',
-  //           target: 'sr',
-  //           key: 'AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU',
-  //         },
-  //       }
-  //     );
-
-  //     const translatedText = response.data.data.translations[0].translatedText;
-  //     setTranslatedWord(translatedText);
-  //   } catch (error) {
-  //     console.error('Error translating word:', error);
-  //   }
-  // };
-
-  /////////////
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
 
+    localStorage.setItem('izabraniNivo', selectedLevel.toString());
+    console.log(selectedLevel);
     // For 0-10
     // What is the sentiment of this tweet with a value between 0 and 10 (10 being its very positive)?
 
@@ -157,10 +155,18 @@ function App() {
       });
   }
 
-  console.log(tweet);
-  console.log(selectedLevel);
+  let classname="bg-red-400";
+
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-center items-center">
+      <div className="w-full h-10 bg-white flex justify-around align-super">
+        <button onClick={trainingOn} className="w-full h-full bg-slate-400">
+          Translating
+        </button>{" "}
+        <button onClick={exerciseOn} className="w-full h-full bg-slate-300">
+          Exercise
+        </button>
+      </div>
       <div>
         <div className="flex pb-3">
           <input
@@ -215,8 +221,13 @@ function App() {
           Prevedi uz pomoc AI translatora
         </button>
       </div>
-
-      <GoogleTranslate tweet={tweet} googleTranslateOn={googleTranslateOn}></GoogleTranslate>
+      <div className={onOf}>
+        <GoogleTranslate
+          tweet={tweet}
+          googleTranslateOn={googleTranslateOn}
+        ></GoogleTranslate>
+        <VoiceRecording></VoiceRecording>
+      </div>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
@@ -225,7 +236,7 @@ function App() {
       </div>
       <div className="flex flex-col text-center text-white">
         {sentiment !== "" && isValid ? (
-          <h3>
+          <h3 className={onOf}>
             Rijec "{tweet}" na srpskom znaci: {sentiment}
           </h3>
         ) : null}
@@ -235,8 +246,6 @@ function App() {
           </h3>
         ) : null}
       </div>
-
-      <VoiceRecording></VoiceRecording>
     </div>
   );
 }
