@@ -38,19 +38,19 @@ export function GoogleTranslate(props) {
   }
 
   return (
-    <>
-      <div className={classname}>
-        <h1>English to Serbian Translation</h1>
-        <input
-          type="text"
-          value={tweet}
-          onChange={() => {}}
-          placeholder="Enter a word in English"
-        />
+    <div className={classname}>
+      <div className="bg-white">
+      <h1>English to Serbian Translation</h1>
+      <input
+        type="text"
+        value={tweet}
+        onChange={() => {}}
+        placeholder="Enter a word in English"
+      />
 
-        <button onClick={translateWord}>Translate</button>
-        {translatedWord && <p>Translated: {translatedWord}</p>}
+      <button onClick={translateWord}>Translate</button>
+      {translatedWord && <p>Translated: {translatedWord}</p>}
       </div>
-    </>
+    </div>
   );
 }

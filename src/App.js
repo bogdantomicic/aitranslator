@@ -13,6 +13,8 @@ const API_KEY = "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";
 function App() {
 
   const localStorageLevel = localStorage.getItem('izabraniNivo');
+  const localStorageTask = localStorage.getItem('izabraniTask');
+
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
@@ -21,20 +23,30 @@ function App() {
   const [isValid, setIsValid] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState(false);
+  const [exercise, setExercise] = useState(localStorageTask);
   
 
-function exercisee () {
-  setExercise(true)
+  function exerciseOn () {
+  setExercise("true")
   }
-let onOf;
-let onOf2;
+  function trainingOn () {
+  setExercise("false");
+  }
+
+  localStorage.setItem('izabraniTask', exercise);
+ 
+
   console.log(exercise);
 
-  if (exercise) {
+  let onOf;
+  if (exercise == "true") {
     onOf = "hidden"
-    console.log(onOf);
+  }else{
+    onOf = "block"
   }
+
+ 
+
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
@@ -148,8 +160,10 @@ let onOf2;
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-center items-center">
       <div className="w-full h-10 bg-white flex justify-around align-super">
-        <button className="w-full h-full bg-slate-400">Translating</button>{" "}
-        <button onClick={exercisee} className="w-full h-full bg-slate-300">
+        <button onClick={trainingOn} className="w-full h-full bg-slate-400">
+          Translating
+        </button>{" "}
+        <button onClick={exerciseOn} className="w-full h-full bg-slate-300">
           Exercise
         </button>
       </div>
@@ -207,12 +221,13 @@ let onOf2;
           Prevedi uz pomoc AI translatora
         </button>
       </div>
-
-      <GoogleTranslate
-        classname={classname}
-        tweet={tweet}
-        googleTranslateOn={googleTranslateOn}
-      ></GoogleTranslate>
+      <div className={onOf}>
+        <GoogleTranslate
+          tweet={tweet}
+          googleTranslateOn={googleTranslateOn}
+        ></GoogleTranslate>
+        <VoiceRecording></VoiceRecording>
+      </div>
 
       <div className="pt-2">
         <p className=" text-red-800 font-extrabold text-center">
@@ -221,7 +236,7 @@ let onOf2;
       </div>
       <div className="flex flex-col text-center text-white">
         {sentiment !== "" && isValid ? (
-          <h3>
+          <h3 className={onOf}>
             Rijec "{tweet}" na srpskom znaci: {sentiment}
           </h3>
         ) : null}
@@ -231,8 +246,6 @@ let onOf2;
           </h3>
         ) : null}
       </div>
-
-      <VoiceRecording></VoiceRecording>
     </div>
   );
 }
