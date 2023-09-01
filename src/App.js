@@ -6,6 +6,7 @@ import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import { Resources } from "./components/Resources";
 import  SelectedLevel  from "./components/SelectedLevel";
+import SelectedLevel1 from "./components/SelectedLevel copy";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -13,18 +14,27 @@ const API_KEY = "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";
 
 
 function App() {
-  const localStorageLevel = localStorage.getItem("izabraniNivo");
+  // const localStorageLevel = localStorage.getItem("izabraniNivo");
   const localStorageTask = localStorage.getItem("izabraniTask");
+
+  
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
+  // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
   const [exercise, setExercise] = useState(localStorageTask);
   const [tryWord, setTryWord] = useState();
+  const [selectedLevel, setConstantValue] = useState('');
+
+  console.log(selectedLevel + "sdasds");
+
+  const setConstantInParent = (value) => {
+    setConstantValue(value);
+  };
 
   const reci = sentiment.split(" ");
 
@@ -79,10 +89,10 @@ function App() {
     ofOn = "hidden";
   }
 
-  const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
-  const handleLevelChange = (event) => {
-    setSelectedLevel(event.target.value);
-  };
+  // const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
+  // const handleLevelChange = (event) => {
+  //   setSelectedLevel(event.target.value);
+  // };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -186,7 +196,7 @@ function App() {
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-start items-center pt-20">
       <Resources className="z-0"></Resources>
       
-      <div className="w-full desktop:w-1/2 text-center mb-10 !z-10">
+      {/* <div className="w-full desktop:w-1/2 text-center mb-10 !z-10">
       
      
         <p className="w-full">
@@ -217,8 +227,8 @@ function App() {
         {selectedLevel && (
           <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
         )}
-      </div>
-      
+      </div> */}
+      <SelectedLevel1 setConstantInParent={setConstantInParent}></SelectedLevel1>
       <div className=" w-full desktop:w-1/2 mx-auto text-center z-10">
       <SelectedLevel></SelectedLevel>
         <div className="w-full h-10 bg-slate-200 flex justify-around align-super">
