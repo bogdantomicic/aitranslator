@@ -1,10 +1,11 @@
-import classNames from "classnames";
+
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import { Resources } from "./components/Resources";
+import  SelectedLevel  from "./components/SelectedLevel";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -12,13 +13,8 @@ const API_KEY = "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";
 
 
 function App() {
- 
-  
-
-
-  const localStorageLevel = localStorage.getItem('izabraniNivo');
-  const localStorageTask = localStorage.getItem('izabraniTask');
-
+  const localStorageLevel = localStorage.getItem("izabraniNivo");
+  const localStorageTask = localStorage.getItem("izabraniTask");
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
@@ -30,16 +26,14 @@ function App() {
   const [exercise, setExercise] = useState(localStorageTask);
   const [tryWord, setTryWord] = useState();
 
-
   const reci = sentiment.split(" ");
 
-  let  reciBezZareza = [];
+  let reciBezZareza = [];
   for (let i = 0; i < reci.length; i++) {
     reciBezZareza[i] = reci[i].slice(0, -1).toString();
   }
 
   let prvaTriUNizu = reci.slice(0, 3);
-
 
   // let objekatReci = [];
   // for (let i = 0; i < reci.length; i++) {
@@ -47,26 +41,22 @@ function App() {
   // }
   // console.log(objekatReci);
 
-  
-
-  function youGuessed () {
+  function youGuessed() {
     if (reciBezZareza.includes(tryWord.toLowerCase())) {
       alert("bravo");
     } else {
       alert("probaj ponovo");
     }
   }
-  
 
-  function exerciseOn () {
-  setExercise("true")
+  function exerciseOn() {
+    setExercise("true");
   }
-  function trainingOn () {
-  setExercise("false");
+  function trainingOn() {
+    setExercise("false");
   }
 
-  localStorage.setItem('izabraniTask', exercise);
- 
+  localStorage.setItem("izabraniTask", exercise);
 
   console.log(exercise);
   console.log(tweet);
@@ -75,25 +65,19 @@ function App() {
   let marked1;
   let marked2;
   if (exercise == "true") {
-    onOf = "hidden"
-    marked1 = "bg-slate-400"
-  }else{
-    onOf = "block"
-    marked2= "bg-slate-400"
+    onOf = "hidden";
+    marked1 = "bg-slate-400";
+  } else {
+    onOf = "block";
+    marked2 = "bg-slate-400";
   }
 
   let ofOn;
   if (exercise == "true") {
-    ofOn = "block"
-    
-  }else{
-    ofOn = "hidden"
-    
+    ofOn = "block";
+  } else {
+    ofOn = "hidden";
   }
-
-
- 
-
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
   const handleLevelChange = (event) => {
@@ -110,14 +94,10 @@ function App() {
     console.log("NE RADI");
   }
 
- 
   const handleButtonClick = () => {
     setGoogleTranslateOn(true);
     callOpenAIAPI();
   };
-
-
-
 
   async function callOpenAIAPI() {
     console.log("Calling the OpenAI API");
@@ -164,8 +144,6 @@ function App() {
         setSentiment(data.choices[0].message.content); // Positive or negative
       });
 
-
-
     const APIBody2 = {
       model: "gpt-3.5-turbo",
       messages: [
@@ -207,7 +185,10 @@ function App() {
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-start items-center pt-20">
       <Resources className="z-0"></Resources>
+      
       <div className="w-full desktop:w-1/2 text-center mb-10 !z-10">
+      
+     
         <p className="w-full">
           {selectedLevel ? (
             ""
@@ -237,8 +218,9 @@ function App() {
           <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
         )}
       </div>
-
+      
       <div className=" w-full desktop:w-1/2 mx-auto text-center z-10">
+      <SelectedLevel></SelectedLevel>
         <div className="w-full h-10 bg-slate-200 flex justify-around align-super">
           <button onClick={trainingOn} className={"w-full h-ful " + marked2}>
             Translating
@@ -313,6 +295,7 @@ function App() {
         >
           Pogodi prevod
         </button>
+       
       </div>
       
     </div>
