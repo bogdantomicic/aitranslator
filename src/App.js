@@ -46,12 +46,6 @@ function App() {
 
   let prvaTriUNizu = reci.slice(0, 3);
 
-  // let objekatReci = [];
-  // for (let i = 0; i < reci.length; i++) {
-  //   objekatReci[`rijec_${i + 1}`] = reci[i];
-  // }
-  // console.log(objekatReci);
-
   function youGuessed() {
     if (reciBezZareza.includes(tryWord.toLowerCase())) {
       alert("bravo");
@@ -77,10 +71,10 @@ function App() {
   let marked2;
   if (exercise == "true") {
     onOf = "hidden";
-    marked1 = "bg-slate-400";
+    marked1 = "bg-indigo-600 text-white";
   } else {
     onOf = "block";
-    marked2 = "bg-slate-400";
+    marked2 = "bg-indigo-600 text-white";
   }
 
   let ofOn;
@@ -90,10 +84,6 @@ function App() {
     ofOn = "hidden";
   }
 
-  // const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
-  // const handleLevelChange = (event) => {
-  //   setSelectedLevel(event.target.value);
-  // };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -115,8 +105,7 @@ function App() {
 
     localStorage.setItem("izabraniNivo", selectedLevel.toString());
     console.log(selectedLevel);
-    // For 0-10
-    // What is the sentiment of this tweet with a value between 0 and 10 (10 being its very positive)?
+
 
     setIsValid(inputValue in wordList);
 
@@ -152,7 +141,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment(data.choices[0].message.content); // Positive or negative
+        setSentiment(data.choices[0].message.content); 
       });
 
     const APIBody2 = {
@@ -189,56 +178,24 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment2(data.choices[0].message.content); // Positive or negative
+        setSentiment2(data.choices[0].message.content); 
       });
   }
 
   return (
     <div className="flex h-screen w-full bg-black flex-col mx-auto justify-start items-center pt-20">
       <Resources className="z-0"></Resources>
-      
-      {/* <div className="w-full desktop:w-1/2 text-center mb-10 !z-10">
-      
-     
-        <p className="w-full">
-          {selectedLevel ? (
-            ""
-          ) : (
-            <label
-              className="text-red-800 font-extrabold text-center w-full"
-              htmlFor="levelSelect"
-            >
-              Izaberite nivo jezika:
-            </label>
-          )}
-        </p>
-        <select
-          className=" w-1/2 text-center h-5"
-          id="levelSelect"
-          value={selectedLevel}
-          onChange={handleLevelChange}
-        >
-          <option value="">A0, A1, B1 ...</option>
-          {levels.map((level) => (
-            <option key={level} value={level}>
-              {level}
-            </option>
-          ))}
-        </select>
-        {selectedLevel && (
-          <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
-        )}
-      </div> */}
-      {/* <SelectedLevel1 setConstantInParent={setConstantInParent}></SelectedLevel1> */}
-      <div className=" w-full desktop:w-1/2 mx-auto text-center z-10">
-      {/* <SelectedLevel></SelectedLevel> */}
-      <SelectedLevel2 setConstantInParent={setConstantInParent}></SelectedLevel2>
-        <div className="w-full h-10 bg-slate-200 flex justify-around align-super">
-          <button onClick={trainingOn} className={"w-full h-ful " + marked2}>
-            Translating
+
+      <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 border rounded-xl border-ring-indigo-600 bg-white p-4 shadow-2xl">
+        <SelectedLevel2
+          setConstantInParent={setConstantInParent}
+        ></SelectedLevel2>
+        <div className="w-full h-10 flex justify-around align-super rounded-lg shadow-sm border">
+          <button onClick={trainingOn} className={"w-full h-full rounded-l-lg " + marked2}>
+            Prikazi prevod
           </button>{" "}
-          <button onClick={exerciseOn} className={"w-full h-full " + marked1}>
-            Exercise
+          <button onClick={exerciseOn} className={"w-full h-full rounded-r-lg " + marked1}>
+            Vjezbaj
           </button>
         </div>
         <div>
@@ -307,9 +264,7 @@ function App() {
         >
           Pogodi prevod
         </button>
-       
       </div>
-      
     </div>
   );
 }

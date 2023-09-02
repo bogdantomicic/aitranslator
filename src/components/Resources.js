@@ -44,7 +44,7 @@ function ResourcePattern({ mouseX, mouseY, ...gridProps }) {
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-4xl bg-gradient-to-r from-[#ffffffaf] to-[#ffffffbc] opacity-20 transition duration-100 group-hover:opacity-20 dark:from-[#202d2e49] dark:to-[#30342864]"
+        className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#ffffffaf] to-[#ffffffbc] opacity-20 transition duration-100 group-hover:opacity-20 dark:from-[#202d2e49] dark:to-[#30342864]"
         style={style}
       />
       <motion.div
@@ -77,10 +77,10 @@ function Resource({ resource }) {
     <div
       key={resource.href}
       onMouseMove={onMouseMove}
-      className="group relative flex rounded-2xl bg-[#6b71b4] transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5 duration-1000"
+      className="group relative flex rounded-2xl bg-white transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5 duration-1000"
     >
       <ResourcePattern {...resource.pattern} mouseX={mouseX} mouseY={mouseY} />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20"/>
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10"/>
       <div className="relative rounded-2xl px-4 pb-4 pt-16 h-screen">
         <ResourceIcon icon={resource.icon} />
         <h3 className="mt-4 text-sm font-semibold leading-7 text-zinc-900 dark:text-white">
