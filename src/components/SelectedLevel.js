@@ -28,11 +28,11 @@ export default function SelectedLevel({setConstantInParent}) {
       <Listbox value={selectedLevel} onChange={handleLevelChange}>
         {({ open }) => (
           <>
-            <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
-              Izaberi nivo znanja svoga Engleskog jezika!
+            <Listbox.Label className="block text-md font-medium leading-6 text-gray-900">
+              Izaberi nivo znanja Engleskog jezika!
             </Listbox.Label>
             <div className="relative mt-2">
-              <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-md sm:leading-6 ">
                 <span className="block truncate">{selectedLevel}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <ChevronUpDownIcon
@@ -50,7 +50,7 @@ export default function SelectedLevel({setConstantInParent}) {
                 leaveTo="opacity-0"
               >
                 
-                  <Listbox.Options className=" text-start absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Listbox.Options className=" text-start absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-md ">
                   <div className='w-1/2'></div>
                     {levels.map((level) => (
                       <Listbox.Option
