@@ -7,6 +7,7 @@ import { GoogleTranslate } from './components/GoogleTranslate';
 import { Resources } from "./components/Resources";
 import  SelectedLevel  from "./components/SelectedLevel";
 import SelectedLevel1 from "./components/SelectedLevel copy";
+import SelectedLevel2 from "./components/SelectedLevel copy 2";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -228,9 +229,10 @@ function App() {
           <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
         )}
       </div> */}
-      <SelectedLevel1 setConstantInParent={setConstantInParent}></SelectedLevel1>
+      {/* <SelectedLevel1 setConstantInParent={setConstantInParent}></SelectedLevel1> */}
       <div className=" w-full desktop:w-1/2 mx-auto text-center z-10">
-      <SelectedLevel></SelectedLevel>
+      {/* <SelectedLevel></SelectedLevel> */}
+      <SelectedLevel2 setConstantInParent={setConstantInParent}></SelectedLevel2>
         <div className="w-full h-10 bg-slate-200 flex justify-around align-super">
           <button onClick={trainingOn} className={"w-full h-ful " + marked2}>
             Translating

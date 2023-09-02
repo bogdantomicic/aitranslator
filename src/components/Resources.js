@@ -29,7 +29,7 @@ function ResourceIcon({ icon: Icon }) {
 }
 
 function ResourcePattern({ mouseX, mouseY, ...gridProps }) {
-  let maskImage = useMotionTemplate`radial-gradient(900px at ${mouseX}px ${mouseY}px, white, transparent)`;
+  let maskImage = useMotionTemplate`radial-gradient(500px at ${mouseX}px ${mouseY}px, white, transparent)`;
   let style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
@@ -44,7 +44,7 @@ function ResourcePattern({ mouseX, mouseY, ...gridProps }) {
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#202d2ea6] to-[#303428a7] opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
+        className="absolute inset-0 rounded-4xl bg-gradient-to-r from-[#ffffffaf] to-[#ffffffbc] opacity-20 transition duration-100 group-hover:opacity-20 dark:from-[#202d2e49] dark:to-[#30342864]"
         style={style}
       />
       <motion.div
@@ -77,7 +77,7 @@ function Resource({ resource }) {
     <div
       key={resource.href}
       onMouseMove={onMouseMove}
-      className="group relative flex rounded-2xl bg-[#3f6061bb] transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5 duration-1000"
+      className="group relative flex rounded-2xl bg-[#6b71b4] transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5 duration-1000"
     >
       <ResourcePattern {...resource.pattern} mouseX={mouseX} mouseY={mouseY} />
       <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/7.5 group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20"/>
@@ -85,6 +85,7 @@ function Resource({ resource }) {
         <ResourceIcon icon={resource.icon} />
         <h3 className="mt-4 text-sm font-semibold leading-7 text-zinc-900 dark:text-white">
         <span className="absolute inset-0 rounded-2xl" />
+        
         </h3>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
           {resource.description}

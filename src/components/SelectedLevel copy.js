@@ -1,11 +1,9 @@
 import { useState } from "react";
 
-
-
 export default function SelectedLevel1 ({setConstantInParent}) {
   const localStorageLevel = localStorage.getItem("izabraniNivo");
   const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
-  
+
   setConstantInParent(selectedLevel);
 
   const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
