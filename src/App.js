@@ -5,7 +5,8 @@ import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import { Resources } from "./components/Resources";
-import  SelectedLevel  from "./components/SelectedLevel";
+
+import SelectedLevel from "./components/SelectedLevel";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -13,33 +14,37 @@ const API_KEY = "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";
 
 
 function App() {
-  const localStorageLevel = localStorage.getItem("izabraniNivo");
+  // const localStorageLevel = localStorage.getItem("izabraniNivo");
   const localStorageTask = localStorage.getItem("izabraniTask");
+
+  
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
   const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
+  // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState(localStorageTask);
+  const [exercise, setExercise] = useState("true" || localStorageTask);
   const [tryWord, setTryWord] = useState();
+  const [selectedLevel, setConstantValue] = useState('');
+
+  console.log(selectedLevel + "sdasds");
+
+  const setConstantInParent = (value) => {
+    setConstantValue(value);
+  };
 
   const reci = sentiment.split(" ");
+  console.log(reci);
 
   let reciBezZareza = [];
   for (let i = 0; i < reci.length; i++) {
     reciBezZareza[i] = reci[i].slice(0, -1).toString();
   }
 
-  let prvaTriUNizu = reci.slice(0, 3);
-
-  // let objekatReci = [];
-  // for (let i = 0; i < reci.length; i++) {
-  //   objekatReci[`rijec_${i + 1}`] = reci[i];
-  // }
-  // console.log(objekatReci);
+  let prvaTriUNizu = reci.slice(0, 6);
 
   function youGuessed() {
     if (reciBezZareza.includes(tryWord.toLowerCase())) {
@@ -66,10 +71,10 @@ function App() {
   let marked2;
   if (exercise == "true") {
     onOf = "hidden";
-    marked1 = "bg-slate-400";
+    marked1 = "bg-indigo-600 transition duration-300";
   } else {
     onOf = "block";
-    marked2 = "bg-slate-400";
+    marked2 = "bg-indigo-600 transition duration-300";
   }
 
   let ofOn;
@@ -79,10 +84,6 @@ function App() {
     ofOn = "hidden";
   }
 
-  const levels = ["A0", "A1", "B1", "B1+", "C1", "C2"];
-  const handleLevelChange = (event) => {
-    setSelectedLevel(event.target.value);
-  };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -104,8 +105,7 @@ function App() {
 
     localStorage.setItem("izabraniNivo", selectedLevel.toString());
     console.log(selectedLevel);
-    // For 0-10
-    // What is the sentiment of this tweet with a value between 0 and 10 (10 being its very positive)?
+
 
     setIsValid(inputValue in wordList);
 
@@ -123,7 +123,7 @@ function App() {
         },
       ],
       temperature: 0,
-      max_tokens: 60,
+      max_tokens: 500,
       top_p: 1.0,
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
@@ -141,7 +141,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment(data.choices[0].message.content); // Positive or negative
+        setSentiment(data.choices[0].message.content); 
       });
 
     const APIBody2 = {
@@ -178,61 +178,55 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment2(data.choices[0].message.content); // Positive or negative
+        setSentiment2(data.choices[0].message.content); 
       });
   }
 
   return (
-    <div className="flex h-screen w-full bg-black flex-col mx-auto justify-start items-center pt-20">
-      <Resources className="z-0"></Resources>
+    <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20 bg-white">
+      {/* <Resources></Resources> */}
       
-      <div className="w-full desktop:w-1/2 text-center mb-10 !z-10">
-      
-     
-        <p className="w-full">
-          {selectedLevel ? (
-            ""
-          ) : (
-            <label
-              className="text-red-800 font-extrabold text-center w-full"
-              htmlFor="levelSelect"
-            >
-              Izaberite nivo jezika:
-            </label>
-          )}
-        </p>
-        <select
-          className=" w-1/2 text-center h-5"
-          id="levelSelect"
-          value={selectedLevel}
-          onChange={handleLevelChange}
+      {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
+      <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
+        <button
+          onClick={trainingOn}
+          className={"w-full h-full rounded-l-lg " + marked2}
         >
-          <option value="">A0, A1, B1 ...</option>
-          {levels.map((level) => (
-            <option key={level} value={level}>
-              {level}
-            </option>
-          ))}
-        </select>
-        {selectedLevel && (
-          <p className="text-white">Izabrali ste nivo: {selectedLevel}</p>
-        )}
+          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute">
+            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px] ">
+              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
+                PRIKAZI PREVOD
+              </span>
+            </p>
+          </div>
+        </button>{" "}
+        <button
+          onClick={exerciseOn}
+          className={"w-full h-full rounded-r-lg " + marked1}
+        >
+          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute mx-auto">
+            <p className="flex items-center justify-start h-full  font-semibold pt-[115px] pl-[1px]">
+              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
+                VJEZBAJ
+              </span>
+            </p>
+          </div>
+        </button>
       </div>
+      {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
       
-      <div className=" w-full desktop:w-1/2 mx-auto text-center z-10">
-      <SelectedLevel></SelectedLevel>
-        <div className="w-full h-10 bg-slate-200 flex justify-around align-super">
-          <button onClick={trainingOn} className={"w-full h-ful " + marked2}>
-            Translating
-          </button>{" "}
-          <button onClick={exerciseOn} className={"w-full h-full " + marked1}>
-            Exercise
-          </button>
-        </div>
-        <div>
-          <div className="flex pb-3">
+       {/* SELECTED LEVEL */}
+      <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
+        <SelectedLevel
+          setConstantInParent={setConstantInParent}
+        ></SelectedLevel>
+        {/* SELECTED LEVEL */}
+
+        {/* INPUT RIJECI KAO I BUTTON ZA POKRETANJE */}
+        <div className="flex border rounded-lg border-indigo-900 shadow-xl">
+          <div className="flex w-3/4 border rounded-lg">
             <input
-              className="h-12 bg-gray-500 px-4 text-center py-2 text-sm font-medium text-black transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-600 dark:text-gray-300 hover:bg-gray-100 rounded-sm w-full mt-5"
+              className="py-6 px-4 text-center placeholder:text-sm desktop:placeholder:text-2xl text-sm desktop:text-2xl text-black transition-colors duration-200 sm:px-6 hover:bg-indigo-100 w-full rounded-lg rounded-r-none"
               id="a2"
               type="text"
               minLength="2"
@@ -241,21 +235,49 @@ function App() {
               value={inputValue.toLowerCase()}
               onInput={handleInputChange}
               onChange={(e) => setTweet(e.target.value)}
-              placeholder="Kopirajte svoju rijec ovdje!"
+              placeholder="Unesis nepoznatu rijec ovdje!"
               cols={50}
               rows={10}
             />
           </div>
-        </div>
 
-        <div className="overflow-hidden flex-row bg-white border divide-x rounded-sm rtl:flex-row-reverse dark:bg-gray-900 dark:border-gray-700 dark:divide-gray-700 mt-5">
-          <button
-            className=" w-full px-4 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 sm:text-base sm:px-6 dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            onClick={isValid && selectedLevel ? handleButtonClick : noFunction}
-          >
-            Pokreni AI translatora
-          </button>
+          <div className=" w-1/4 h-1/1 overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none">
+            <button
+              className="desktop:py-6 py-2 w-full h-full px-2 desktop:px-4 text-sm desktop:text-2xl  text-white transition-colors duration-200  sm:px-6 hover:bg-indigo-500"
+              onClick={
+                isValid && selectedLevel ? handleButtonClick : noFunction
+              }
+            >
+              Pokreni AI translatora
+            </button>
+          </div>
         </div>
+        {/* INPUT RIJECI KAO I BUTTON ZA POKRETANJE */}
+
+        {/* NEISPRAVAN TEXT */}
+        <div className="pt-2">
+          <p className=" text-[#a0404e] font-extrabold text-center">
+            {isValid ? "" : "NEISPRAVAN TEXT, PROBAJTE PONOVO"}
+          </p>
+        </div>
+        {/* NEISPRAVAN TEXT */}
+
+        {/* AI ODGOVORI */}
+        <div className="flex flex-col justify-center text-center text-black w-full desktop:h-40 h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-sm desktop:text-2xl px-3">
+          {sentiment !== "" && isValid ? (
+            <h3 className={onOf}>
+              Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
+            </h3>
+          ) : null}
+          {sentiment2 !== "" && isValid ? (
+            <h3 className=" pt-5">
+              Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
+            </h3>
+          ) : null}
+        </div>
+        {/* AI ODGOVORI */}
+
+        {/* GOOGLE TRANSLATOR */}
         <div className={onOf}>
           <GoogleTranslate
             tweet={tweet}
@@ -263,41 +285,32 @@ function App() {
           ></GoogleTranslate>
           <VoiceRecording></VoiceRecording>
         </div>
+        {/* GOOGLE TRANSLATOR */}
 
-        <div className="pt-2">
-          <p className=" text-red-800 font-extrabold text-center">
-            {isValid ? "" : "Neispravan text"}
-          </p>
-        </div>
-        <div className="flex flex-col text-center text-white">
-          {sentiment !== "" && isValid ? (
-            <h3 className={onOf}>
-              Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
-            </h3>
-          ) : null}
-          {sentiment2 !== "" && isValid ? (
-            <h3>
-              Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
-            </h3>
-          ) : null}
-        </div>
-        <input
-          onChange={(e) => {
-            setTryWord(e.target.value);
-          }}
-          placeholder="Unesi rijec"
-          className={ofOn + " w-full text-center h-10 mt-5"}
-          type="text"
-        />
-        <button
-          onClick={youGuessed}
-          className={ofOn + " bg-white p-2 mt-3 w-full"}
+        {/* PROBAJ DA POGODIS PREVOD*/}
+        <div
+          className={
+            ofOn +
+            " flex border rounded-lg border-indigo-900 shadow-xl mt-5 text-sm desktop:text-2xl h-20"
+          }
         >
-          Pogodi prevod
-        </button>
-       
+          <input
+            onChange={(e) => {
+              setTryWord(e.target.value);
+            }}
+            placeholder={"Pogodi koji je prevod za rijec '" + tweet + "'"}
+            className=" flex w-3/4 border rounded-lg rounded-r-none text-center hover:bg-indigo-100 transition-colors duration-200"
+            type="text"
+          />
+          <button
+            onClick={youGuessed}
+            className="w-1/4 h-full overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none text-white hover:bg-indigo-500 transition-colors duration-200"
+          >
+            Pogodi prevod
+          </button>
+        </div>
+        {/* PROBAJ DA POGODIS PREVOD*/}
       </div>
-      
     </div>
   );
 }

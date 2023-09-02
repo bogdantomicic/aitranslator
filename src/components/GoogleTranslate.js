@@ -39,8 +39,8 @@ export function GoogleTranslate(props) {
 
   return (
     <div className={classname}>
-      <div className="bg-white mt-5 h-14">
-        <h1>Google Translate</h1>
+      <div className="mt-5 py-1 rounded-lg border-indigo-500 border text-sm desktop:text-2xl bg-indigo-100">
+        <h1>Google Translate prevod:</h1>
         <input
           className="hidden"
           type="text"
