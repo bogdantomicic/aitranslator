@@ -37,6 +37,7 @@ function App() {
   };
 
   const reci = sentiment.split(" ");
+  console.log(reci);
 
   let reciBezZareza = [];
   for (let i = 0; i < reci.length; i++) {
@@ -70,10 +71,10 @@ function App() {
   let marked2;
   if (exercise == "true") {
     onOf = "hidden";
-    marked1 = "bg-indigo-100 transition duration-300";
+    marked1 = "bg-indigo-600 transition duration-300";
   } else {
     onOf = "block";
-    marked2 = "bg-indigo-100 transition duration-300";
+    marked2 = "bg-indigo-600 transition duration-300";
   }
 
   let ofOn;
@@ -122,7 +123,7 @@ function App() {
         },
       ],
       temperature: 0,
-      max_tokens: 60,
+      max_tokens: 500,
       top_p: 1.0,
       frequency_penalty: 0.0,
       presence_penalty: 0.0,
@@ -182,17 +183,18 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20">
+    <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20 bg-white">
       {/* <Resources></Resources> */}
+      
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
       <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
         <button
           onClick={trainingOn}
-          className={"w-full h-full rounded-l-lg  " + marked2}
+          className={"w-full h-full rounded-l-lg " + marked2}
         >
-          <div className="h-20 w-1/2 top-[0px] absolute ">
-            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px]">
-              <span className="w-11/12 desktop:w-2/3 h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white">
+          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute">
+            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px] ">
+              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
                 PRIKAZI PREVOD
               </span>
             </p>
@@ -202,9 +204,9 @@ function App() {
           onClick={exerciseOn}
           className={"w-full h-full rounded-r-lg " + marked1}
         >
-          <div className="h-20 w-1/2 top-[0px] absolute mx-auto">
+          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute mx-auto">
             <p className="flex items-center justify-start h-full  font-semibold pt-[115px] pl-[1px]">
-              <span className="w-11/12 desktop:w-2/3 h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white">
+              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
                 VJEZBAJ
               </span>
             </p>
@@ -212,18 +214,19 @@ function App() {
         </button>
       </div>
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
-
+      
+       {/* SELECTED LEVEL */}
       <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
         <SelectedLevel
           setConstantInParent={setConstantInParent}
         ></SelectedLevel>
+        {/* SELECTED LEVEL */}
 
         {/* INPUT RIJECI KAO I BUTTON ZA POKRETANJE */}
-        <div className='flex border rounded-lg border-indigo-900 shadow-xl'>
-
+        <div className="flex border rounded-lg border-indigo-900 shadow-xl">
           <div className="flex w-3/4 border rounded-lg">
             <input
-              className="py-6 px-4 text-center placeholder:text-2xl text-2xl text-black transition-colors duration-200 sm:px-6 hover:bg-indigo-100 w-full "
+              className="py-6 px-4 text-center placeholder:text-sm desktop:placeholder:text-2xl text-sm desktop:text-2xl text-black transition-colors duration-200 sm:px-6 hover:bg-indigo-100 w-full rounded-lg rounded-r-none"
               id="a2"
               type="text"
               minLength="2"
@@ -238,9 +241,9 @@ function App() {
             />
           </div>
 
-          <div className=" w-1/4 h-full overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none">
+          <div className=" w-1/4 h-1/1 overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none">
             <button
-              className="py-6 w-full h-full px-4 text-2xl  text-white transition-colors duration-200  sm:px-6 hover:bg-indigo-500"
+              className="desktop:py-6 py-2 w-full h-full px-2 desktop:px-4 text-sm desktop:text-2xl  text-white transition-colors duration-200  sm:px-6 hover:bg-indigo-500"
               onClick={
                 isValid && selectedLevel ? handleButtonClick : noFunction
               }
@@ -248,7 +251,6 @@ function App() {
               Pokreni AI translatora
             </button>
           </div>
-
         </div>
         {/* INPUT RIJECI KAO I BUTTON ZA POKRETANJE */}
 
@@ -261,15 +263,14 @@ function App() {
         {/* NEISPRAVAN TEXT */}
 
         {/* AI ODGOVORI */}
-        <div className="flex flex-col justify-center text-center text-black w-full h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-2xl px-3">
-
+        <div className="flex flex-col justify-center text-center text-black w-full desktop:h-40 h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-sm desktop:text-2xl px-3">
           {sentiment !== "" && isValid ? (
             <h3 className={onOf}>
               Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
             </h3>
           ) : null}
           {sentiment2 !== "" && isValid ? (
-            <h3 className=' pt-5'>
+            <h3 className=" pt-5">
               Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
             </h3>
           ) : null}
@@ -286,25 +287,29 @@ function App() {
         </div>
         {/* GOOGLE TRANSLATOR */}
 
-        {/* PROBAJ DA POGODIS PREVOD*/}     
-        <div className={ofOn + ' flex border rounded-lg border-indigo-900 shadow-xl mt-5 text-2xl h-20'}>
-        <input
-          onChange={(e) => {
-            setTryWord(e.target.value);
-          }}
-          placeholder={"Pogodi koji je prevod za rijec '" + tweet + "'"}
-          className=" flex w-3/4 border rounded-lg text-center"
-          type="text"
-        />
-        <button
-          onClick={youGuessed}
-          className="w-1/4 h-full overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none text-white"
+        {/* PROBAJ DA POGODIS PREVOD*/}
+        <div
+          className={
+            ofOn +
+            " flex border rounded-lg border-indigo-900 shadow-xl mt-5 text-sm desktop:text-2xl h-20"
+          }
         >
-          Pogodi prevod
-        </button>
+          <input
+            onChange={(e) => {
+              setTryWord(e.target.value);
+            }}
+            placeholder={"Pogodi koji je prevod za rijec '" + tweet + "'"}
+            className=" flex w-3/4 border rounded-lg rounded-r-none text-center hover:bg-indigo-100 transition-colors duration-200"
+            type="text"
+          />
+          <button
+            onClick={youGuessed}
+            className="w-1/4 h-full overflow-hidden border divide-x rtl:flex-row-reverse right-[317px]  rounded-lg bg-indigo-600 rounded-l-none text-white hover:bg-indigo-500 transition-colors duration-200"
+          >
+            Pogodi prevod
+          </button>
         </div>
-        {/* PROBAJ DA POGODIS PREVOD*/} 
-
+        {/* PROBAJ DA POGODIS PREVOD*/}
       </div>
     </div>
   );
