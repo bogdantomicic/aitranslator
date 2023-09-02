@@ -5,9 +5,8 @@ import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import { Resources } from "./components/Resources";
-import  SelectedLevel  from "./components/SelectedLevel";
-import SelectedLevel1 from "./components/SelectedLevel copy";
-import SelectedLevel2 from "./components/SelectedLevel copy 2";
+
+import SelectedLevel from "./components/SelectedLevel";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
@@ -27,7 +26,7 @@ function App() {
   const [isValid, setIsValid] = useState(true);
   // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState(localStorageTask);
+  const [exercise, setExercise] = useState("true" || localStorageTask);
   const [tryWord, setTryWord] = useState();
   const [selectedLevel, setConstantValue] = useState('');
 
@@ -71,10 +70,10 @@ function App() {
   let marked2;
   if (exercise == "true") {
     onOf = "hidden";
-    marked1 = "bg-indigo-600 text-white";
+    marked1 = "bg-indigo-100 transition duration-300";
   } else {
     onOf = "block";
-    marked2 = "bg-indigo-600 text-white";
+    marked2 = "bg-indigo-100 transition duration-300";
   }
 
   let ofOn;
@@ -183,21 +182,41 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-black flex-col mx-auto justify-start items-center pt-20">
-      <Resources className="z-0"></Resources>
+    <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20">
+      
 
-      <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 border rounded-xl border-ring-indigo-600 bg-white p-4 shadow-2xl">
-        <SelectedLevel2
+      <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
+        <button
+          onClick={trainingOn}
+          className={"w-full h-full rounded-l-lg  " + marked2}
+        >
+          <div className="h-20 w-1/2 top-[0px] absolute ">
+            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px]">
+              <span className="w-11/12 desktop:w-2/3 h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white">
+                PRIKAZI PREVOD
+              </span>
+            </p>
+          </div>
+        </button>{" "}
+        <button
+          onClick={exerciseOn}
+          className={"w-full h-full rounded-r-lg " + marked1}
+        >
+          <div className="h-20 w-1/2 top-[0px] absolute mx-auto">
+            <p className="flex items-center justify-start h-full  font-semibold pt-[115px] pl-[1px]">
+              <span className="w-11/12 desktop:w-2/3 h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white">
+                VJEZBAJ
+              </span>
+            </p>
+          </div>
+        </button>
+      </div>
+
+      <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
+        <SelectedLevel
           setConstantInParent={setConstantInParent}
-        ></SelectedLevel2>
-        <div className="w-full h-10 flex justify-around align-super rounded-lg shadow-sm border">
-          <button onClick={trainingOn} className={"w-full h-full rounded-l-lg " + marked2}>
-            Prikazi prevod
-          </button>{" "}
-          <button onClick={exerciseOn} className={"w-full h-full rounded-r-lg " + marked1}>
-            Vjezbaj
-          </button>
-        </div>
+        ></SelectedLevel>
+
         <div>
           <div className="flex pb-3">
             <input
@@ -238,7 +257,7 @@ function App() {
             {isValid ? "" : "Neispravan text"}
           </p>
         </div>
-        <div className="flex flex-col text-center text-white">
+        <div className="flex flex-col text-center text-black">
           {sentiment !== "" && isValid ? (
             <h3 className={onOf}>
               Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
