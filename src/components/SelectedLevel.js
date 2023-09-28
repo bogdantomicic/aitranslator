@@ -10,8 +10,8 @@ function classNames(...classes) {
 }
 
 export default function SelectedLevel({setselectedLevelInParent}) {
-  const localStorageLevel = localStorage.getItem("izabraniNivo");
-  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel || levels[3],);
+  const localStorageLevel = localStorage.getItem("selectedLevelStorage");
+  const [selectedLevel, setSelectedLevel] = useState(localStorageLevel || levels[2],);
   
   setselectedLevelInParent(selectedLevel);
 

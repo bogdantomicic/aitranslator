@@ -19,7 +19,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState(localStorageTask);
+  const [exercise, setExercise] = useState(localStorageTask || true);
   const [tryWord, setTryWord] = useState();
   const [selectedLevel, setConstantValue] = useState("");
 
@@ -87,7 +87,7 @@ function App() {
   };
 
   async function callOpenAIAPI() {
-    localStorage.setItem("izabraniNivo", selectedLevel.toString());
+    localStorage.setItem("selectedLevelStorage", selectedLevel.toString());
 
     setIsValid(inputValue in wordList);
 
