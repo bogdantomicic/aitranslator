@@ -1,15 +1,9 @@
 import { useState } from "react";
-import  axios  from "axios";
-import classNames from "classnames";
-
-
-
-
+import axios from "axios";
 
 export function GoogleTranslate(props) {
   const [translatedWord, setTranslatedWord] = useState("");
-  //   const [inputWord, setInputWord] = useState("");
-  const { tweet, googleTranslateOn, classname } = props;
+  const { unknownWord, googleTranslateOn, classname } = props;
 
   const translateWord = async () => {
     try {
@@ -18,7 +12,7 @@ export function GoogleTranslate(props) {
         {},
         {
           params: {
-            q: tweet,
+            q: unknownWord,
             source: "en",
             target: "bs",
             key: "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU",
@@ -44,13 +38,15 @@ export function GoogleTranslate(props) {
         <input
           className="hidden"
           type="text"
-          value={tweet}
+          value={unknownWord}
           onChange={() => {}}
           placeholder="Enter a word in English"
         />
 
         <button className="hidden" onClick={translateWord}></button>
+        <div className="h-9">
         {translatedWord && <p>{translatedWord}</p>}
+        </div>
       </div>
     </div>
   );

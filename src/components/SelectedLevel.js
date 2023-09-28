@@ -9,11 +9,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function SelectedLevel({setConstantInParent}) {
+export default function SelectedLevel({setselectedLevelInParent}) {
   const localStorageLevel = localStorage.getItem("izabraniNivo");
   const [selectedLevel, setSelectedLevel] = useState(localStorageLevel || levels[3],);
   
-  setConstantInParent(selectedLevel);
+  setselectedLevelInParent(selectedLevel);
 
   const handleLevelChange = (event) => {
     

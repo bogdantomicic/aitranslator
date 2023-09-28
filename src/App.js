@@ -1,11 +1,8 @@
-
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
-
-
 import SelectedLevel from "./components/SelectedLevel";
 
 // const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
@@ -16,35 +13,34 @@ const API_KEY = "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";
 function App() {
   const localStorageTask = localStorage.getItem("izabraniTask");
 
-  const [tweet, setTweet] = useState("");
-  const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
-  const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
+  const [unknownWord, setUnknownWord] = useState("");
+  const [translatedWord, setTranslatedWord] = useState(""); 
+  const [exampleSentance, setExampleSentance] = useState(""); 
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
   const [exercise, setExercise] = useState(localStorageTask);
   const [tryWord, setTryWord] = useState();
   const [selectedLevel, setConstantValue] = useState("");
 
-  const setConstantInParent = (value) => {
+  const setselectedLevelInParent = (value) => {
     setConstantValue(value);
   };
 
-  const reci = sentiment.split(" ");
+  const words = translatedWord.split(" ");
 
-  let reciBezZareza = [];
-  for (let i = 0; i < reci.length; i++) {
-    reciBezZareza[i] = reci[i].slice(0, -1).toString();
+  let wordsWithoutCommas = [];
+  for (let i = 0; i < words.length; i++) {
+    wordsWithoutCommas[i] = words[i].slice(0, -1).toString();
   }
 
-  let prvaTriUNizu = reci.slice(0, 6);
+  let firstSixWords = words.slice(0, 6);
 
   function youGuessed() {
-    if (reciBezZareza.includes(tryWord.toLowerCase())) {
-      alert("bravo");
+    if (wordsWithoutCommas.includes(tryWord.toLowerCase())) {
+      alert("BRAVO!");
     } else {
-      alert("probaj ponovo");
+      alert("Probaj ponovo.");
     }
   }
 
@@ -91,10 +87,7 @@ function App() {
   };
 
   async function callOpenAIAPI() {
-    console.log("Calling the OpenAI API");
-
     localStorage.setItem("izabraniNivo", selectedLevel.toString());
-    console.log(selectedLevel);
 
     setIsValid(inputValue in wordList);
 
@@ -108,7 +101,7 @@ function App() {
         },
         {
           role: "user",
-          content: tweet,
+          content: unknownWord,
         },
       ],
       temperature: 0,
@@ -130,7 +123,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment(data.choices[0].message.content);
+        setTranslatedWord(data.choices[0].message.content);
       });
 
     const APIBody2 = {
@@ -145,7 +138,7 @@ function App() {
         },
         {
           role: "user",
-          content: tweet,
+          content: unknownWord,
         },
       ],
       temperature: 0,
@@ -167,7 +160,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment2(data.choices[0].message.content);
+        setExampleSentance(data.choices[0].message.content);
       });
   }
 
@@ -207,7 +200,7 @@ function App() {
       {/* SELECTED LEVEL */}
       <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
         <SelectedLevel
-          setConstantInParent={setConstantInParent}
+          setselectedLevelInParent={setselectedLevelInParent}
         ></SelectedLevel>
         {/* SELECTED LEVEL */}
 
@@ -223,7 +216,7 @@ function App() {
               autoFocus
               value={inputValue.toLowerCase()}
               onInput={handleInputChange}
-              onChange={(e) => setTweet(e.target.value)}
+              onChange={(e) => setUnknownWord(e.target.value)}
               placeholder="Unesis nepoznatu rijec ovdje!"
               cols={50}
               rows={10}
@@ -253,14 +246,14 @@ function App() {
 
         {/* AI ODGOVORI */}
         <div className="flex flex-col justify-center text-center text-black w-full desktop:h-40 h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-sm desktop:text-2xl px-3">
-          {sentiment !== "" && isValid ? (
+          {translatedWord !== "" && isValid ? (
             <h3 className={onOf}>
-              Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
+              Rijec "{unknownWord}" na srpskom moze da znaci sledece: {firstSixWords}
             </h3>
           ) : null}
-          {sentiment2 !== "" && isValid ? (
+          {exampleSentance !== "" && isValid ? (
             <h3 className=" pt-5">
-              Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
+              Primjer recenice na {selectedLevel} nivou engleskog: {exampleSentance}
             </h3>
           ) : null}
         </div>
@@ -269,7 +262,7 @@ function App() {
         {/* GOOGLE TRANSLATOR */}
         <div className={onOf}>
           <GoogleTranslate
-            tweet={tweet}
+            unknownWord={unknownWord}
             googleTranslateOn={googleTranslateOn}
           ></GoogleTranslate>
           <VoiceRecording></VoiceRecording>
@@ -287,7 +280,7 @@ function App() {
             onChange={(e) => {
               setTryWord(e.target.value);
             }}
-            placeholder={"Pogodi koji je prevod za rijec '" + tweet + "'"}
+            placeholder={"Pogodi koji je prevod za rijec '" + unknownWord + "'"}
             className=" flex w-3/4 border rounded-lg rounded-r-none text-center hover:bg-indigo-100 transition-colors duration-200"
             type="text"
           />
