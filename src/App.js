@@ -4,7 +4,7 @@ import wordList from './englishWords.json';
 import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
-import { Resources } from "./components/Resources";
+
 
 import SelectedLevel from "./components/SelectedLevel";
 
@@ -14,10 +14,7 @@ const API_KEY = "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";
 
 
 function App() {
-  // const localStorageLevel = localStorage.getItem("izabraniNivo");
   const localStorageTask = localStorage.getItem("izabraniTask");
-
-  
 
   const [tweet, setTweet] = useState("");
   const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
@@ -26,18 +23,15 @@ function App() {
   const [isValid, setIsValid] = useState(true);
   // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState("true" || localStorageTask);
+  const [exercise, setExercise] = useState(localStorageTask);
   const [tryWord, setTryWord] = useState();
-  const [selectedLevel, setConstantValue] = useState('');
-
-  console.log(selectedLevel + "sdasds");
+  const [selectedLevel, setConstantValue] = useState("");
 
   const setConstantInParent = (value) => {
     setConstantValue(value);
   };
 
   const reci = sentiment.split(" ");
-  console.log(reci);
 
   let reciBezZareza = [];
   for (let i = 0; i < reci.length; i++) {
@@ -63,13 +57,10 @@ function App() {
 
   localStorage.setItem("izabraniTask", exercise);
 
-  console.log(exercise);
-  console.log(tweet);
-
   let onOf;
   let marked1;
   let marked2;
-  if (exercise == "true") {
+  if (exercise === "true") {
     onOf = "hidden";
     marked1 = "bg-indigo-600 transition duration-300";
   } else {
@@ -78,12 +69,11 @@ function App() {
   }
 
   let ofOn;
-  if (exercise == "true") {
+  if (exercise === "true") {
     ofOn = "block";
   } else {
     ofOn = "hidden";
   }
-
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -105,7 +95,6 @@ function App() {
 
     localStorage.setItem("izabraniNivo", selectedLevel.toString());
     console.log(selectedLevel);
-
 
     setIsValid(inputValue in wordList);
 
@@ -141,7 +130,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment(data.choices[0].message.content); 
+        setSentiment(data.choices[0].message.content);
       });
 
     const APIBody2 = {
@@ -178,14 +167,14 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment2(data.choices[0].message.content); 
+        setSentiment2(data.choices[0].message.content);
       });
   }
 
   return (
     <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20 bg-white">
       {/* <Resources></Resources> */}
-      
+
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
       <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
         <button
@@ -214,8 +203,8 @@ function App() {
         </button>
       </div>
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
-      
-       {/* SELECTED LEVEL */}
+
+      {/* SELECTED LEVEL */}
       <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
         <SelectedLevel
           setConstantInParent={setConstantInParent}

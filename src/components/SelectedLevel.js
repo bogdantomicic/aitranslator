@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { Combobox, Listbox, Transition } from '@headlessui/react'
+import { Listbox, Transition } from "@headlessui/react";
 import { ReactComponent as CheckIcon }  from '../icons/CheckIcon.svg'
 import { ReactComponent as ChevronUpDownIcon }  from '../icons/ChevronUpDownIcon.svg'
  
@@ -14,8 +14,6 @@ export default function SelectedLevel({setConstantInParent}) {
   const [selectedLevel, setSelectedLevel] = useState(localStorageLevel || levels[3],);
   
   setConstantInParent(selectedLevel);
-
-  console.log(selectedLevel + " 2232323232323323");
 
   const handleLevelChange = (event) => {
     
