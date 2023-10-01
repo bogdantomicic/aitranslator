@@ -5,10 +5,7 @@ import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import SelectedLevel from "./components/SelectedLevel";
 
-// const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
-
-
 
 function App() {
   const localStorageTask = localStorage.getItem("izabraniTask");
@@ -35,6 +32,14 @@ function App() {
   }
 
   let firstSixWords = words.slice(0, 6);
+
+  const handleInputChange = (event) => {
+    const newValue = event.target.value;
+    const words = newValue.trim().split(/\s+/);
+    setInputValue(words[0]);
+  };
+
+
 
   function youGuessed() {
     if (wordsWithoutCommas.includes(tryWord.toLowerCase())) {
@@ -70,12 +75,6 @@ function App() {
   } else {
     ofOn = "hidden";
   }
-
-  const handleInputChange = (event) => {
-    const newValue = event.target.value;
-    const words = newValue.trim().split(/\s+/);
-    setInputValue(words[0]);
-  };
 
   function noFunction() {
     console.log("NE RADI");
