@@ -4,6 +4,8 @@ import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import SelectedLevel from "./components/SelectedLevel";
+import CorrectingWords from './components/CorrectingWords';
+
 
 const API_KEY = "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";
 
@@ -19,19 +21,29 @@ function App() {
   const [exercise, setExercise] = useState(localStorageTask || true);
   const [tryWord, setTryWord] = useState();
   const [selectedLevel, setConstantValue] = useState("");
+  const [wordsWithoutCommas, setWordsWithoutCommas ] = useState("");
+  const [firstSixWords, setFirstSixWords] = useState("");
 
   const setselectedLevelInParent = (value) => {
     setConstantValue(value);
   };
 
-  const words = translatedWord.split(" ");
+  const setwordsWithoutCommas = (value) => {
+   setWordsWithoutCommas(value);
+  };
 
-  let wordsWithoutCommas = [];
-  for (let i = 0; i < words.length; i++) {
-    wordsWithoutCommas[i] = words[i].slice(0, -1).toString();
+  const setfirstSixWords = (value) => {
+    setFirstSixWords(value);
   }
 
-  let firstSixWords = words.slice(0, 6);
+  // const words = translatedWord.split(" ");
+
+  // let wordsWithoutCommas = [];
+  // for (let i = 0; i < words.length; i++) {
+  //   wordsWithoutCommas[i] = words[i].slice(0, -1).toString();
+  // }
+
+  // let firstSixWords = words.slice(0, 6);
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -166,7 +178,11 @@ function App() {
   return (
     <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20 bg-white">
       {/* <Resources></Resources> */}
-
+      <CorrectingWords
+        translatedWord={translatedWord}
+        setwordsWithoutCommas={setwordsWithoutCommas}
+        setfirstSixWords={setfirstSixWords}
+      ></CorrectingWords>
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
       <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
         <button
@@ -247,12 +263,14 @@ function App() {
         <div className="flex flex-col justify-center text-center text-black w-full desktop:h-40 h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-sm desktop:text-2xl px-3">
           {translatedWord !== "" && isValid ? (
             <h3 className={onOf}>
-              Rijec "{unknownWord}" na srpskom moze da znaci sledece: {firstSixWords}
+              Rijec "{unknownWord}" na srpskom moze da znaci sledece:{" "}
+              {firstSixWords}
             </h3>
           ) : null}
           {exampleSentance !== "" && isValid ? (
             <h3 className=" pt-5">
-              Primjer recenice na {selectedLevel} nivou engleskog: {exampleSentance}
+              Primjer recenice na {selectedLevel} nivou engleskog:{" "}
+              {exampleSentance}
             </h3>
           ) : null}
         </div>
