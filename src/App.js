@@ -5,53 +5,45 @@ import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
 import SelectedLevel from "./components/SelectedLevel";
 import CorrectingWords from './components/CorrectingWords';
-
+import { ExerciseTrainingButton } from "./components/ExerciseTrainingButton";
 
 const API_KEY = "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";
 
 function App() {
-  const localStorageTask = localStorage.getItem("izabraniTask");
-
   const [unknownWord, setUnknownWord] = useState("");
-  const [translatedWord, setTranslatedWord] = useState(""); 
-  const [exampleSentance, setExampleSentance] = useState(""); 
+  const [translatedWord, setTranslatedWord] = useState("");
+  const [exampleSentance, setExampleSentance] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState(localStorageTask || true);
   const [tryWord, setTryWord] = useState();
   const [selectedLevel, setConstantValue] = useState("");
-  const [wordsWithoutCommas, setWordsWithoutCommas ] = useState("");
+  const [wordsWithoutCommas, setWordsWithoutCommas] = useState("");
   const [firstSixWords, setFirstSixWords] = useState("");
+  const [ofOn, setOfOn] = useState("");
+  const [onOf, setOnOf] = useState("");
 
   const setselectedLevelInParent = (value) => {
     setConstantValue(value);
   };
-
   const setwordsWithoutCommas = (value) => {
-   setWordsWithoutCommas(value);
+    setWordsWithoutCommas(value);
   };
-
   const setfirstSixWords = (value) => {
     setFirstSixWords(value);
-  }
-
-  // const words = translatedWord.split(" ");
-
-  // let wordsWithoutCommas = [];
-  // for (let i = 0; i < words.length; i++) {
-  //   wordsWithoutCommas[i] = words[i].slice(0, -1).toString();
-  // }
-
-  // let firstSixWords = words.slice(0, 6);
+  };
+  const setofOn = (value) => {
+    setOfOn(value);
+  };
+  const setonOf = (value) => {
+    setOnOf(value);
+  };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
     const words = newValue.trim().split(/\s+/);
     setInputValue(words[0]);
   };
-
-
 
   function youGuessed() {
     if (wordsWithoutCommas.includes(tryWord.toLowerCase())) {
@@ -61,35 +53,8 @@ function App() {
     }
   }
 
-  function exerciseOn() {
-    setExercise("true");
-  }
-  function trainingOn() {
-    setExercise("false");
-  }
-
-  localStorage.setItem("izabraniTask", exercise);
-
-  let onOf;
-  let marked1;
-  let marked2;
-  if (exercise === "true") {
-    onOf = "hidden";
-    marked1 = "bg-indigo-600 transition duration-300";
-  } else {
-    onOf = "block";
-    marked2 = "bg-indigo-600 transition duration-300";
-  }
-
-  let ofOn;
-  if (exercise === "true") {
-    ofOn = "block";
-  } else {
-    ofOn = "hidden";
-  }
-
   function noFunction() {
-    console.log("NE RADI");
+    alert("NEISPRAVAN TEXt");
   }
 
   const handleButtonClick = () => {
@@ -152,7 +117,7 @@ function App() {
           content: unknownWord,
         },
       ],
-      temperature: 0,
+      temperature: 0.7,
       max_tokens: 60,
       top_p: 1.0,
       frequency_penalty: 0.0,
@@ -183,33 +148,12 @@ function App() {
         setwordsWithoutCommas={setwordsWithoutCommas}
         setfirstSixWords={setfirstSixWords}
       ></CorrectingWords>
+
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
-      <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
-        <button
-          onClick={trainingOn}
-          className={"w-full h-full rounded-l-lg " + marked2}
-        >
-          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute">
-            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px] ">
-              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
-                PRIKAZI PREVOD
-              </span>
-            </p>
-          </div>
-        </button>{" "}
-        <button
-          onClick={exerciseOn}
-          className={"w-full h-full rounded-r-lg " + marked1}
-        >
-          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute mx-auto">
-            <p className="flex items-center justify-start h-full  font-semibold pt-[115px] pl-[1px]">
-              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
-                VJEZBAJ
-              </span>
-            </p>
-          </div>
-        </button>
-      </div>
+      <ExerciseTrainingButton
+        setofOn={setofOn}
+        setonOf={setonOf}
+      ></ExerciseTrainingButton>
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
 
       {/* SELECTED LEVEL */}
