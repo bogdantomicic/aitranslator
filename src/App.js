@@ -7,7 +7,8 @@ import SelectedLevel from "./components/SelectedLevel";
 import CorrectingWords from './components/CorrectingWords';
 import { ExerciseTrainingButton } from "./components/ExerciseTrainingButton";
 
-const API_KEY = "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";
+// const API_KEY = "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";
+const API_KEY = "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";
 
 function App() {
   const [unknownWord, setUnknownWord] = useState("");
