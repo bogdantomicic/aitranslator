@@ -1,89 +1,43 @@
-
 import { useState } from 'react'
 import wordList from './englishWords.json';
 import './App.css';
 import { VoiceRecording } from "./components/VoiceRecording";
 import { GoogleTranslate } from './components/GoogleTranslate';
-import { Resources } from "./components/Resources";
-
 import SelectedLevel from "./components/SelectedLevel";
+import CorrectingWords from './components/CorrectingWords';
+import { ExerciseTrainingButton } from "./components/ExerciseTrainingButton";
 
-// const GOOGLE_API_KEY = "AIzaSyCDSKkD5pZl7j40eIs2Tk5LzAV6vboXqZU";
 const API_KEY = "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";
 
-
-
 function App() {
-  // const localStorageLevel = localStorage.getItem("izabraniNivo");
-  const localStorageTask = localStorage.getItem("izabraniTask");
-
-  
-
-  const [tweet, setTweet] = useState("");
-  const [sentiment, setSentiment] = useState(""); // "Negative" or "Positive"
-  const [sentiment2, setSentiment2] = useState(""); // "Negative" or "Positive"
+  const [unknownWord, setUnknownWord] = useState("");
+  const [translatedWord, setTranslatedWord] = useState("");
+  const [exampleSentance, setExampleSentance] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  // const [selectedLevel, setSelectedLevel] = useState(localStorageLevel);
   const [googleTranslateOn, setGoogleTranslateOn] = useState(false);
-  const [exercise, setExercise] = useState("true" || localStorageTask);
   const [tryWord, setTryWord] = useState();
-  const [selectedLevel, setConstantValue] = useState('');
+  const [selectedLevel, setConstantValue] = useState("");
+  const [wordsWithoutCommas, setWordsWithoutCommas] = useState("");
+  const [firstSixWords, setFirstSixWords] = useState("");
+  const [ofOn, setOfOn] = useState("");
+  const [onOf, setOnOf] = useState("");
 
-  console.log(selectedLevel + "sdasds");
-
-  const setConstantInParent = (value) => {
+  const setselectedLevelInParent = (value) => {
     setConstantValue(value);
   };
-
-  const reci = sentiment.split(" ");
-  console.log(reci);
-
-  let reciBezZareza = [];
-  for (let i = 0; i < reci.length; i++) {
-    reciBezZareza[i] = reci[i].slice(0, -1).toString();
-  }
-
-  let prvaTriUNizu = reci.slice(0, 6);
-
-  function youGuessed() {
-    if (reciBezZareza.includes(tryWord.toLowerCase())) {
-      alert("bravo");
-    } else {
-      alert("probaj ponovo");
-    }
-  }
-
-  function exerciseOn() {
-    setExercise("true");
-  }
-  function trainingOn() {
-    setExercise("false");
-  }
-
-  localStorage.setItem("izabraniTask", exercise);
-
-  console.log(exercise);
-  console.log(tweet);
-
-  let onOf;
-  let marked1;
-  let marked2;
-  if (exercise == "true") {
-    onOf = "hidden";
-    marked1 = "bg-indigo-600 transition duration-300";
-  } else {
-    onOf = "block";
-    marked2 = "bg-indigo-600 transition duration-300";
-  }
-
-  let ofOn;
-  if (exercise == "true") {
-    ofOn = "block";
-  } else {
-    ofOn = "hidden";
-  }
-
+  const setwordsWithoutCommas = (value) => {
+    setWordsWithoutCommas(value);
+  };
+  const setfirstSixWords = (value) => {
+    setFirstSixWords(value);
+  };
+  const setofOn = (value) => {
+    setOfOn(value);
+  };
+  const setonOf = (value) => {
+    setOnOf(value);
+  };
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
@@ -91,8 +45,16 @@ function App() {
     setInputValue(words[0]);
   };
 
+  function youGuessed() {
+    if (wordsWithoutCommas.includes(tryWord.toLowerCase())) {
+      alert("BRAVO!");
+    } else {
+      alert("Probaj ponovo.");
+    }
+  }
+
   function noFunction() {
-    console.log("NE RADI");
+    alert("NEISPRAVAN TEXt");
   }
 
   const handleButtonClick = () => {
@@ -101,11 +63,7 @@ function App() {
   };
 
   async function callOpenAIAPI() {
-    console.log("Calling the OpenAI API");
-
-    localStorage.setItem("izabraniNivo", selectedLevel.toString());
-    console.log(selectedLevel);
-
+    localStorage.setItem("selectedLevelStorage", selectedLevel.toString());
 
     setIsValid(inputValue in wordList);
 
@@ -119,7 +77,7 @@ function App() {
         },
         {
           role: "user",
-          content: tweet,
+          content: unknownWord,
         },
       ],
       temperature: 0,
@@ -141,7 +99,7 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment(data.choices[0].message.content); 
+        setTranslatedWord(data.choices[0].message.content);
       });
 
     const APIBody2 = {
@@ -156,10 +114,10 @@ function App() {
         },
         {
           role: "user",
-          content: tweet,
+          content: unknownWord,
         },
       ],
-      temperature: 0,
+      temperature: 0.7,
       max_tokens: 60,
       top_p: 1.0,
       frequency_penalty: 0.0,
@@ -178,47 +136,30 @@ function App() {
         return data.json();
       })
       .then((data) => {
-        setSentiment2(data.choices[0].message.content); 
+        setExampleSentance(data.choices[0].message.content);
       });
   }
 
   return (
     <div className="flex h-screen w-full flex-col mx-auto justify-start items-center pt-20 bg-white">
       {/* <Resources></Resources> */}
-      
+      <CorrectingWords
+        translatedWord={translatedWord}
+        setwordsWithoutCommas={setwordsWithoutCommas}
+        setfirstSixWords={setfirstSixWords}
+      ></CorrectingWords>
+
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
-      <div className="w-full h-full flex left-0 align-super rounded-lg  shadow-sm border mb-10 absolute top-[0px] z-10">
-        <button
-          onClick={trainingOn}
-          className={"w-full h-full rounded-l-lg " + marked2}
-        >
-          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute">
-            <p className="flex items-center justify-end h-full font-semibold pt-[115px] pr-[1px] ">
-              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
-                PRIKAZI PREVOD
-              </span>
-            </p>
-          </div>
-        </button>{" "}
-        <button
-          onClick={exerciseOn}
-          className={"w-full h-full rounded-r-lg " + marked1}
-        >
-          <div className="h-20 w-1/2 top-[15px] desktop:top-[0px] absolute mx-auto">
-            <p className="flex items-center justify-start h-full  font-semibold pt-[115px] pl-[1px]">
-              <span className="w-11/12 desktop:w-2/3 h-8 desktop:h-14  flex justify-center items-center bg-indigo-600 rounded-lg rounded-b-none text-sm desktop:text-2xl shadow-2xl hover:bg-indigo-400 transition duration-150 text-white border-white border">
-                VJEZBAJ
-              </span>
-            </p>
-          </div>
-        </button>
-      </div>
+      <ExerciseTrainingButton
+        setofOn={setofOn}
+        setonOf={setonOf}
+      ></ExerciseTrainingButton>
       {/* BUTTON ZA BIRANJE VJEZBA/PREVOD */}
-      
-       {/* SELECTED LEVEL */}
+
+      {/* SELECTED LEVEL */}
       <div className=" w-11/12 desktop:w-2/3 mx-auto text-center z-10 rounded-xl rounded-t-none border-indigo-600  border-t-0 border-[1px] bg-white p-4 shadow-2xl mt-16">
         <SelectedLevel
-          setConstantInParent={setConstantInParent}
+          setselectedLevelInParent={setselectedLevelInParent}
         ></SelectedLevel>
         {/* SELECTED LEVEL */}
 
@@ -234,7 +175,7 @@ function App() {
               autoFocus
               value={inputValue.toLowerCase()}
               onInput={handleInputChange}
-              onChange={(e) => setTweet(e.target.value)}
+              onChange={(e) => setUnknownWord(e.target.value)}
               placeholder="Unesis nepoznatu rijec ovdje!"
               cols={50}
               rows={10}
@@ -264,14 +205,16 @@ function App() {
 
         {/* AI ODGOVORI */}
         <div className="flex flex-col justify-center text-center text-black w-full desktop:h-40 h-40 items-center shadow-lg mt-5 rounded-lg bg-indigo-100 border-indigo-600 border-[1px] text-sm desktop:text-2xl px-3">
-          {sentiment !== "" && isValid ? (
+          {translatedWord !== "" && isValid ? (
             <h3 className={onOf}>
-              Rijec "{tweet}" na srpskom moze da znaci sledece: {prvaTriUNizu}
+              Rijec "{unknownWord}" na srpskom moze da znaci sledece:{" "}
+              {firstSixWords}
             </h3>
           ) : null}
-          {sentiment2 !== "" && isValid ? (
+          {exampleSentance !== "" && isValid ? (
             <h3 className=" pt-5">
-              Primjer recenice na {selectedLevel} nivou engleskog: {sentiment2}
+              Primjer recenice na {selectedLevel} nivou engleskog:{" "}
+              {exampleSentance}
             </h3>
           ) : null}
         </div>
@@ -280,7 +223,7 @@ function App() {
         {/* GOOGLE TRANSLATOR */}
         <div className={onOf}>
           <GoogleTranslate
-            tweet={tweet}
+            unknownWord={unknownWord}
             googleTranslateOn={googleTranslateOn}
           ></GoogleTranslate>
           <VoiceRecording></VoiceRecording>
@@ -298,7 +241,7 @@ function App() {
             onChange={(e) => {
               setTryWord(e.target.value);
             }}
-            placeholder={"Pogodi koji je prevod za rijec '" + tweet + "'"}
+            placeholder={"Pogodi koji je prevod za rijec '" + unknownWord + "'"}
             className=" flex w-3/4 border rounded-lg rounded-r-none text-center hover:bg-indigo-100 transition-colors duration-200"
             type="text"
           />
